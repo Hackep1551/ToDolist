@@ -1,9 +1,10 @@
-﻿#include <iostream>
+﻿#include<iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 #include <algorithm>
 #include <windows.h>
+#include <cstdlib>
 using namespace std;
 struct Task {
     string title;
@@ -229,7 +230,7 @@ void findDescription(const vector<Task>& tasks) {
 }
 // Функция для поиска задач по дате и времени
 void findDateandTime(const vector<Task>& tasks) {
-    cout << "Введите дату и время задачи которую хотите найти"<<endl;
+    cout << "Введите дату и время задачи которую хотите найти" << endl;
     string str;
     cin >> str;
     int i = 0;
@@ -246,6 +247,13 @@ void findDateandTime(const vector<Task>& tasks) {
     if (i == 0) {
         cout << "Задачи с такой датой отсутствуют";
     }
+}
+void clearConsole() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
 int main() {
     setlocale(LC_ALL, "rus");
@@ -324,5 +332,6 @@ int main() {
             cout << "Некорректный выбор. Пожалуйста, выберите существующую опцию." << endl;
             break;
         }
+        clearConsole();
     }
 }
