@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <ctime>
+
 using namespace std;
 struct Task {
     string title;
@@ -12,6 +14,25 @@ struct Task {
     bool favorite;
     string description;
 };
+
+string localDate(char date) {
+    time_t t;
+    tm now;
+    localtime_s(&now, &t);
+    string num = "";
+    if (date == 'D') {
+        num = to_string(now.tm_mday);
+    }
+    if (date == 'Y') {
+        num = to_string(now.tm_year);
+    }
+    if (date == 'M') {
+        num = to_string(now.tm_mon);
+    }
+    return num;
+}
+
+
 // Функция для сортировки задач по приоритету
 void sortTasksPriority(vector<Task>& tasks) {
     sort(tasks.begin(), tasks.end(), [](const Task& task1, const Task& task2) {
@@ -27,6 +48,53 @@ void sortTasksDate(vector<Task>& tasks) {
         });
     cout << "Задачи отсортированы по дате!" << endl;
 }
+
+void printDaysTasks(const vector<Task>& tasks) {
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        const Task& task = tasks[i];
+        cout << endl << localDate('D') << endl << task.date.substr(0,2); 
+        if (localDate('D') == task.date.substr(0, 2)) {
+            cout << "[" << (i + 1) << "] ";
+            cout << "Название: " << task.title << " | ";
+            cout << "Дата: " << task.date << " | ";
+            cout << "Приоритет: " << task.priority << " | ";
+            cout << "Выполнена: " << (task.completed ? "Да" : "Нет") << " | ";
+            cout << "Избранная: " << (task.favorite ? "Да" : "Нет") << " | ";
+            cout << "Описание: " << task.description << endl;
+        }
+    }
+}
+
+void printMonthTasks(const vector<Task>& tasks) {
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        const Task& task = tasks[i];
+        if (localDate('M') == task.date.substr(3, 2)) {
+            cout << "[" << (i + 1) << "] ";
+            cout << "Название: " << task.title << " | ";
+            cout << "Дата: " << task.date << " | ";
+            cout << "Приоритет: " << task.priority << " | ";
+            cout << "Выполнена: " << (task.completed ? "Да" : "Нет") << " | ";
+            cout << "Избранная: " << (task.favorite ? "Да" : "Нет") << " | ";
+            cout << "Описание: " << task.description << endl;
+        }
+    }
+}
+
+void printYearTasks(const vector<Task>& tasks) {
+    for (size_t i = 0; i < tasks.size(); ++i) {
+        const Task& task = tasks[i];
+        if (localDate('Y') == task.date.substr(6, 4)) {
+            cout << "[" << (i + 1) << "] ";
+            cout << "Название: " << task.title << " | ";
+            cout << "Дата: " << task.date << " | ";
+            cout << "Приоритет: " << task.priority << " | ";
+            cout << "Выполнена: " << (task.completed ? "Да" : "Нет") << " | ";
+            cout << "Избранная: " << (task.favorite ? "Да" : "Нет") << " | ";
+            cout << "Описание: " << task.description << endl;
+        }
+    }
+}
+
 // Функция для разделения строки по разделителю
 vector<string> splitString(const string& str, char delimiter) {
     vector<string> tokens;
@@ -38,7 +106,6 @@ vector<string> splitString(const string& str, char delimiter) {
     return tokens;
 }
 
-// Функция для сохранения списка задач в файл
 // Функция для сохранения списка задач в файл
 void saveTasksToFile(const vector<Task>& tasks, const string& filename) {
     ofstream myfile;
@@ -181,6 +248,9 @@ int main() {
         cout << "6. Отсортировать задачи по дате" << endl;
         cout << "7. Отсортировать задачи по приоритету" << endl;
         cout << "8. Показать избранные задачи" << endl;
+        cout << "13. Задания до конца дня" << endl;
+        cout << "14. Задания до конца месяца" << endl;
+        cout << "15. Задания до конца года" << endl;
         cout << "0. Выйти" << endl;
         cout << "Выберите действие: ";
 
@@ -220,6 +290,15 @@ int main() {
             break;
         case 8:
             printFavoriteTasks(tasks);
+            break;
+        case 13:
+            printDaysTasks(tasks);
+            break;
+        case 14:
+            printMonthTasks(tasks);
+            break;
+        case 15:
+            printYearTasks(tasks);
             break;
         default:
             cout << "Некорректный выбор. Пожалуйста, выберите существующую опцию." << endl;
